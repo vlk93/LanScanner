@@ -5,7 +5,7 @@ Prosty skaner sieci lokalnej w C#
 ## Jak uruchomiæ?
 
 Wystarczy uruchomiæ plik LanScanner.exe
-Intalacja nie jest konieczna.
+Instalacja nie jest konieczna.
 
 ## Jak przetestowaæ?
 
