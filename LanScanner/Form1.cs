@@ -16,5 +16,11 @@ namespace LanScanner
         {
             InitializeComponent();
         }
+
+        private void konsola1_TextChanged(object sender, EventArgs e)
+        {
+            konsola1.Text += NetConfig.PokazInterfejsy();
+
+        }
     }
 }

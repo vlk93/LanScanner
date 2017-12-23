@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace LanScanner
 {
-    static class Program
+    public class Program
     {
         /// <summary>
         /// Główny punkt wejścia dla aplikacji.
@@ -17,9 +17,6 @@ namespace LanScanner
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
-
-            Console.WriteLine("Test");
-
         }
     }
 }

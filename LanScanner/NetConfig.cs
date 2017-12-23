@@ -10,20 +10,18 @@ namespace LanScanner
 {
     static class NetConfig
     {
-        static string nazwaHosta = Dns.GetHostName();
-        static IPHostEntry adresyHosta = Dns.GetHostEntry(nazwaHosta); //trzeba przeszukać po wybranym interfejsie
-        static string ipHosta;
-        
+        static IPGlobalProperties wlasciowosciIP = IPGlobalProperties.GetIPGlobalProperties();
+        static string NazwaHosta = wlasciowosciIP.HostName;
+        static string NazwaDomeny = wlasciowosciIP.DomainName;
 
-        static void pokazInterfejsy() //pobierze listę interfejsów
+        static List<NetworkInterface> ListaInterfejsow() //Metoda zwraca listę obietów z interfejsami, do właściwości których można się potem odwoływać i pobierać dane
         {
-            NetworkInterface[] interfejsy = NetworkInterface.GetAllNetworkInterfaces();
-            string listaInterfejsy = interfejsy.ToString();
-            Console.WriteLine(listaInterfejsy);
-            listaInterfejsy.
+            List<NetworkInterface> Interfejsy = new List<NetworkInterface>();
+            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                Interfejsy.Add(nic);
+            }
+            return Interfejsy;
         }
-
-
-
     }
 }
