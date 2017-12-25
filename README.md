@@ -20,3 +20,8 @@ Po pobraniu danych o sieci lokalnej, aplikacja wyznacza wszystkie mo¿liwe adresy
 * rozwi¹zywanie nazw DNS
 * skanowanie wielow¹tkowe
 
+## Wykorzystane Ÿród³a
+
+* https://blogs.msdn.microsoft.com/knom/2008/12/31/ip-address-calculations-with-c-subnetmasks-networks/
+* Or³owski S. - C#, Tworzenie aplikacji sieciowych. Gotowe projekty.
+

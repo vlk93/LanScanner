@@ -11,28 +11,51 @@ namespace LanScanner
 {
     class NetCalculations
     {
-        public List<IPAddress> ListaIPwSieci(NetworkInterface nic) //metoda zwraca listę obiektów klasy IPAddress, bo jak się okazuje może być więcej niż jeden IP per NIC
+        public List<IPAddress> GenerujListeIP(IPAddress poczatkowy, IPAddress koncowy)
         {
-            List<IPAddress> adresyWlasne = new List<IPAddress>();
-            foreach (IPAddress ipek in nic.GetIPProperties().WinsServersAddresses)
-            {
-                adresyWlasne.Add(ipek);
-            }
-            return adresyWlasne;
+            List<IPAddress> ListaIP = new List<IPAddress>();
+            byte[] start = poczatkowy.GetAddressBytes();
+            byte[] end = koncowy.GetAddressBytes();
+
+            for (byte oktet1 = start[0]; oktet1 <= end[0]; oktet1++)
+                for (byte oktet2 = start[1]; oktet2 <= end[1]; oktet2++)
+                    for (byte oktet3 = start[2]; oktet3 <= end[2]; oktet3++)
+                        for (byte oktet4 = start[3]; oktet4 <= end[3]; oktet4++)
+                        {
+                            IPAddress adres = new IPAddress(new byte[] { oktet1, oktet2, oktet3, oktet4 });
+                            ListaIP.Add(adres);
+                        }
+
+            return ListaIP;
         }
 
-        public IPAddress PodajMaske(NetworkInterface nic)
+        public static IPAddress ObliczAdresBroadcast (IPAddress adresWlasny, IPAddress maskaPodsieci)
         {
-            IPAddress adresMaski;
-            foreach (UnicastIPAddressInformation unicastAddress in nic.GetIPProperties().UnicastAddresses)
+            //if (adresWlasny.GetAddressBytes().Length != maskaPodsieci.GetAddressBytes().Length)
+                //throw new ArgumentException("Lengths of IP address and subnet mask do not match.");
+                // Tu też obsługa błędów do zrobienia
+
+            byte[] adresBroadcast = new byte[adresWlasny.GetAddressBytes().Length];
+            for (int i = 0; i < adresBroadcast.Length; i++)
             {
-                if (unicastAddress != null && unicastAddress.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
+                adresBroadcast[i] = (byte)(adresWlasny.GetAddressBytes()[i] | (maskaPodsieci.GetAddressBytes()[i] ^ 255));
+            }
+            return new IPAddress(adresBroadcast);
+        }
+
+        static IPAddress ObliczMaskePodsieci(IPAddress adres, NetworkInterface adapter)
+        {
+            foreach (UnicastIPAddressInformation unicastIPAddressInformation in adapter.GetIPProperties().UnicastAddresses)
+            {
+                if (unicastIPAddressInformation.Address.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    adresMaski = unicastAddress.IPv4Mask;
-                    return unicastAddress.Address;
+                    if (adres.Equals(unicastIPAddressInformation.Address))
+                    {
+                        return unicastIPAddressInformation.IPv4Mask;
+                    }
                 }
             }
-            return null;
+            return null; //do zrobienia obsługa błędów
         }
     }
 }
