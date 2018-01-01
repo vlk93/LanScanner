@@ -8,5 +8,6 @@ namespace LanScanner
 {
     class CSVMaker
     {
+
     }
 }

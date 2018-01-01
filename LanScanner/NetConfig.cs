@@ -24,7 +24,7 @@ namespace LanScanner
             return Interfejsy;
         }
 
-        static List<IPAddress> ListaIPwSieci(NetworkInterface nic) //metoda zwraca listę obiektów klasy IPAddress, bo jak się okazuje może być więcej niż jeden IP per NIC
+        static List<IPAddress> ListaIPwlasne(NetworkInterface nic) //metoda zwraca listę obiektów klasy IPAddress, bo jak się okazuje może być więcej niż jeden IP per NIC
         {
             List<IPAddress> adresyWlasne = new List<IPAddress>();
             foreach (IPAddress ipek in nic.GetIPProperties().WinsServersAddresses)
