@@ -43,7 +43,7 @@ namespace LanScanner
             return new IPAddress(adresBroadcast);
         }
 
-        static IPAddress ObliczMaskePodsieci(IPAddress adres, NetworkInterface adapter)
+        public static IPAddress ObliczMaskePodsieci(IPAddress adres, NetworkInterface adapter)
         {
             foreach (UnicastIPAddressInformation unicastIPAddressInformation in adapter.GetIPProperties().UnicastAddresses)
             {
@@ -57,5 +57,19 @@ namespace LanScanner
             }
             return null; //do zrobienia obsługa błędów
         }
+
+        public static IPAddress ObliczAdresSieci(IPAddress adres, IPAddress maskaPodsieci)
+        {
+            byte[] adresWlasny = adres.GetAddressBytes();
+            byte[] maska = maskaPodsieci.GetAddressBytes();
+
+            byte[] adresSieci = new byte[adresWlasny.Length];
+            for (int i = 0; i < adresSieci.Length; i++)
+            {
+                adresSieci[i] = (byte)(adresWlasny[i] & (maska[i]));
+            }
+            return new IPAddress(adresSieci);
+        }
+
     }
 }
