@@ -31,5 +31,10 @@ namespace LanScanner
         {
 
         }
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
     }
 }
