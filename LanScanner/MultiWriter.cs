@@ -16,8 +16,7 @@ namespace LanScanner
         public MultiWriter (Control textbox, string sciezka = @"log.txt") //domyślna ścieżka - lokalizacja programu
         {
             this.textbox = textbox;
-            this.sciezka = sciezka;
-            
+            this.sciezka = sciezka;    
         }
 
         public override void Write(string tekst)
@@ -39,8 +38,6 @@ namespace LanScanner
                     writetext.WriteLine(tekst + Environment.NewLine);
                 }
             }
-
-
         }
 
         public override void Write(char tekst)

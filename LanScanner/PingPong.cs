@@ -11,11 +11,11 @@ namespace LanScanner
 {
     class PingPong
     {
-        private List<IPAddress> listaIP;
+        MultiWriter writer;
 
-        public PingPong (List<IPAddress> ListaIP)
+        public PingPong (MultiWriter Writer)
         {
-            ListaIP = listaIP;
+            writer = Writer;
         }
 
         public void Ping_Asynch(IPAddress adres, int timeout, byte[] bufor, PingOptions konfig)
@@ -25,17 +25,33 @@ namespace LanScanner
 
             try
             {
-                PingPong.SendAsync(adres.ToString(), timeout, bufor, konfig, null);
+                PingPong.SendAsync(adres.ToString(), timeout= 120, bufor, konfig, null);
             }
             catch (Exception ex) //tu do zrobienia obsługa błędów
             {
-
+                writer.Write("Błąd podczas wysyłania pingu. Adres docelowy:" + adres.ToString() + " Kod błędu: " + ex.Message);
             }
         }
 
         public void KoniecPing(object sender, PingCompletedEventArgs e)
         {
-            //tu do zrboienia informacja z wynikiem pingu
+            if (e.Cancelled || e.Error != null)
+            {
+                writer.Write("Operacja anulowana bądź nieprawidłowy adres.");
+                ((IDisposable)(Ping)sender).Dispose();
+                return;
+            }
+            PingReply odpowiedz = e.Reply;
+            if (odpowiedz.Status == IPStatus.Success)
+            {
+                writer.Write("Odpowiedź z " + odpowiedz.Address.ToString() + " bajtów = " + odpowiedz.Buffer.Length + " czas = " + odpowiedz.RoundtripTime + "ms TTL=" + odpowiedz.Options.Ttl);
+            }
+            else
+            {
+                writer.Write("Błąd: Brak odpowiedzi z " + e.Reply.Address + ":" + odpowiedz.Status);
+                ((IDisposable)(Ping)sender).Dispose();
+            }
+
         }
     }
 }
