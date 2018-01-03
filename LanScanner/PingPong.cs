@@ -48,7 +48,7 @@ namespace LanScanner
             }
             else
             {
-                writer.Write("Błąd: Brak odpowiedzi z " + e.Reply.Address + ":" + odpowiedz.Status);
+                writer.Write("Błąd: Brak odpowiedzi z " + odpowiedz.Address + ":" + odpowiedz.Status);
                 ((IDisposable)(Ping)sender).Dispose();
             }
 

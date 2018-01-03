@@ -24,10 +24,9 @@ namespace LanScanner
         static Random randomizer = new Random();
         static int random = randomizer.Next(300000, 999999);
         static string sciezka_log = @"log_" + data.ToString("dd-MM-yyyy_") + random.ToString() + ".txt";
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
+        NetworkInterface wybranyInterfejs;
+        List<IPAddress> adresyWlasne = new List<IPAddress>();
+        IPAddress wybranyIpek;
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -53,7 +52,7 @@ namespace LanScanner
         private void button1_Click(object sender, EventArgs e)
         {
             MultiWriter writer = new MultiWriter(textBox1, sciezka_log);
-            NetCalculations Obliczenia = new NetCalculations(writer); //inicjalizacja obiektu niezbędna do przeprowadzenia obliczeń
+            NetCalculations obliczenia = new NetCalculations(writer); //inicjalizacja obiektu niezbędna do przeprowadzenia obliczeń
             IPAddress poczatkowy = null;
             IPAddress koncowy = null;
             List<IPAddress> listaIP;
@@ -86,7 +85,7 @@ namespace LanScanner
             }
             writer.Write("Wpisano IP końcowe: " + koncowy.ToString());
 
-            listaIP = Obliczenia.GenerujListeIP(poczatkowy, koncowy);
+            listaIP = obliczenia.GenerujListeIP(poczatkowy, koncowy);
             writer.Write("Wygenerowano następującą listę IP:");
 
             foreach (IPAddress adres in listaIP)
@@ -94,12 +93,86 @@ namespace LanScanner
                 writer.Write(adres.ToString());
             }
 
+            writer.Write("Rozpoczynam ping");
+
             PingPong pingowanie = new PingPong(writer);
 
             foreach (IPAddress adres in listaIP)
             {
                 pingowanie.Ping_Asynch(adres, timeout, bufor, opcje);
             }
+
+            writer.Write("Zakończono");
+        }
+
+        public void button2_Click(object sender, EventArgs e)
+        {
+            List<NetworkInterface> interfejsy = new List<NetworkInterface>();
+
+            MultiWriter writer = new MultiWriter(textBox1, sciezka_log);
+
+            interfejsy = NetConfig.ListaInterfejsow();
+            /*if (interfejsy == null)
+            {
+                writer.Write("Nie pobrano jeszcze interfejsów");
+            }
+            else
+            {
+                foreach (NetworkInterface nic in interfejsy)
+                {
+                    listBox1.Items.Add(nic.Name);
+                }
+                
+            }
+            */
+            listBox1.DataSource = interfejsy;
+            listBox1.DisplayMember = "name";
+            
+        }
+
+
+        private void listBox1_SelectedIndexChanged(Object sender, EventArgs e)
+        {
+            MultiWriter writer = new MultiWriter(textBox1, sciezka_log);
+            wybranyInterfejs = (NetworkInterface)listBox1.SelectedItem;
+            writer.Write("Wybrano Interfejs: " + wybranyInterfejs.Name);
+            if (wybranyInterfejs == null)
+            {
+                writer.Write("Ne wybrano interfejsu");
+            }
+            else
+            {
+                adresyWlasne = NetConfig.ListaIPwlasne(wybranyInterfejs);
+                writer.Write("Pobrano adresy: ");
+            }
+
+            foreach (IPAddress ipek in adresyWlasne) //prawdopodobnie metoda nie pobiera ipków właściwie
+            {
+                writer.Write(ipek.ToString());
+            }
+            listBox2.DataSource = adresyWlasne;
+            listBox1.DisplayMember = "ToString";
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            MultiWriter writer = new MultiWriter(textBox1, sciezka_log);
+            wybranyIpek = (IPAddress)listBox2.SelectedItem;
+            writer.Write("Wybrany adres IP to: " + wybranyIpek.ToString());
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            MultiWriter writer = new MultiWriter(textBox1, sciezka_log);
+            NetCalculations obliczenia = new NetCalculations(writer);
+            writer.Write("Rozpoczynam obliczenia");
+            IPAddress maskaPodsieci;
+
+            maskaPodsieci = NetCalculations.ObliczMaskePodsieci(wybranyIpek, wybranyInterfejs).MapToIPv4();
+            writer.Write("Maska podsieci to: " + maskaPodsieci);
+
+
+
         }
     }
 }

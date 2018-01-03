@@ -14,7 +14,7 @@ namespace LanScanner
         static string NazwaHosta = wlasciowosciIP.HostName;
         static string NazwaDomeny = wlasciowosciIP.DomainName;
 
-        static List<NetworkInterface> ListaInterfejsow() //Metoda zwraca listę obietów z interfejsami, do właściwości których można się potem odwoływać i pobierać dane
+        public static List<NetworkInterface> ListaInterfejsow() //Metoda zwraca listę obietów z interfejsami, do właściwości których można się potem odwoływać i pobierać dane
         {
             List<NetworkInterface> Interfejsy = new List<NetworkInterface>();
             foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
@@ -24,12 +24,15 @@ namespace LanScanner
             return Interfejsy;
         }
 
-        static List<IPAddress> ListaIPwlasne(NetworkInterface nic) //metoda zwraca listę obiektów klasy IPAddress, bo jak się okazuje może być więcej niż jeden IP per NIC
+        public static List<IPAddress> ListaIPwlasne(NetworkInterface nic) //metoda zwraca listę obiektów klasy IPAddress, bo jak się okazuje może być więcej niż jeden IP per NIC
         {
             List<IPAddress> adresyWlasne = new List<IPAddress>();
-            foreach (IPAddress ipek in nic.GetIPProperties().WinsServersAddresses)
+
+            foreach (UnicastIPAddressInformation ipek in nic.GetIPProperties().UnicastAddresses)
             {
-                adresyWlasne.Add(ipek);
+                if (ipek.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    adresyWlasne.Add(IPAddress.Parse(ipek.Address.ToString()));
+                else continue;
             }
             return adresyWlasne;
         }

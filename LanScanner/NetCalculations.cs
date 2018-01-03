@@ -12,10 +12,12 @@ namespace LanScanner
     class NetCalculations
     {
         MultiWriter writer;
+
         public NetCalculations(MultiWriter Writer)
         {
             writer = Writer;
         }
+
         public List<IPAddress> GenerujListeIP(IPAddress poczatkowy, IPAddress koncowy)
         {
             List<IPAddress> ListaIP = new List<IPAddress>();

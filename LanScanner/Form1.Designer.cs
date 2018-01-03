@@ -161,10 +161,11 @@
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.button3.Location = new System.Drawing.Point(288, 215);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(102, 28);
+            this.button3.Size = new System.Drawing.Size(248, 28);
             this.button3.TabIndex = 8;
             this.button3.Text = "Rozpocznij";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // label6
             // 
@@ -183,8 +184,9 @@
             this.listBox2.ItemHeight = 16;
             this.listBox2.Location = new System.Drawing.Point(288, 137);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(102, 68);
+            this.listBox2.Size = new System.Drawing.Size(248, 68);
             this.listBox2.TabIndex = 6;
+            this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -211,10 +213,11 @@
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.button2.Location = new System.Drawing.Point(288, 27);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(102, 23);
+            this.button2.Size = new System.Drawing.Size(248, 23);
             this.button2.TabIndex = 3;
             this.button2.Text = "Pobierz";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // label3
             // 
@@ -240,8 +243,9 @@
             this.listBox1.ItemHeight = 16;
             this.listBox1.Location = new System.Drawing.Point(288, 56);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(102, 68);
+            this.listBox1.Size = new System.Drawing.Size(248, 68);
             this.listBox1.TabIndex = 0;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // Form1
             // 
