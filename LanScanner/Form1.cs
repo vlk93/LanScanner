@@ -112,19 +112,6 @@ namespace LanScanner
             MultiWriter writer = new MultiWriter(textBox1, sciezka_log);
 
             interfejsy = NetConfig.ListaInterfejsow();
-            /*if (interfejsy == null)
-            {
-                writer.Write("Nie pobrano jeszcze interfejsów");
-            }
-            else
-            {
-                foreach (NetworkInterface nic in interfejsy)
-                {
-                    listBox1.Items.Add(nic.Name);
-                }
-                
-            }
-            */
             listBox1.DataSource = interfejsy;
             listBox1.DisplayMember = "name";
             
@@ -167,10 +154,34 @@ namespace LanScanner
             NetCalculations obliczenia = new NetCalculations(writer);
             writer.Write("Rozpoczynam obliczenia");
             IPAddress maskaPodsieci;
+            IPAddress adresSieci;
+            IPAddress adresBroadcast;
+            string dane = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+            byte[] bufor = Encoding.ASCII.GetBytes(dane);
+            int timeout = 120;
+            PingOptions opcje = new PingOptions();
+            List<IPAddress> adresyLAN = new List<IPAddress>();
 
             maskaPodsieci = NetCalculations.ObliczMaskePodsieci(wybranyIpek, wybranyInterfejs).MapToIPv4();
             writer.Write("Maska podsieci to: " + maskaPodsieci);
 
+            adresSieci = NetCalculations.ObliczAdresSieci(wybranyIpek, maskaPodsieci);
+            writer.Write("Adres sieci to: " + adresSieci);
+
+            adresBroadcast = NetCalculations.ObliczAdresBroadcast(wybranyIpek, maskaPodsieci);
+            writer.Write("Maska Podsieci to" + adresBroadcast);
+
+            adresyLAN = obliczenia.GenerujListeIP(adresSieci, adresBroadcast);
+
+            PingPong pingowanie = new PingPong(writer);
+            writer.Write("Rozpoczynam pingowanie");
+
+            foreach (IPAddress ipek in adresyLAN)
+            {
+                pingowanie.Ping_Asynch(ipek, timeout, bufor, opcje);
+            }
+
+            writer.Write("Koniec pingu");
 
 
         }
