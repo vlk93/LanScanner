@@ -7,16 +7,19 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace LanScanner
 {
     class PingPong
     {
         MultiWriter writer;
+        ProgressBar progres;
 
-        public PingPong (MultiWriter Writer)
+        public PingPong (MultiWriter Writer, ProgressBar Progres)
         {
             writer = Writer;
+            progres = Progres;
         }
 
         public void Ping_Asynch(IPAddress adres, int timeout, byte[] bufor, PingOptions konfig)
@@ -36,6 +39,8 @@ namespace LanScanner
 
         public void KoniecPing(object sender, PingCompletedEventArgs e)
         {
+            progres.Value++;
+            progres.Refresh();
             if (e.Cancelled || e.Error != null)
             {
                 writer.Write("Operacja anulowana bądź nieprawidłowy adres.");
@@ -61,9 +66,13 @@ namespace LanScanner
             {
                 PingReply odpowiedz = ping.Send(adres, timeout, bufor, opcje);
                 if (odpowiedz.Status == IPStatus.Success)
+                {
                     return "Odpowiedź z " + adres + " bajtów=" + odpowiedz.Buffer.Length + " czas=" + odpowiedz.RoundtripTime + "ms TTL=" + odpowiedz.Options.Ttl;
+                }
                 else
+                {
                     return "Brak odpowiedzi z: " + adres + " " + odpowiedz.Status.ToString();
+                }
             }
             catch (Exception ex)
             {
@@ -76,11 +85,21 @@ namespace LanScanner
             List<string> odpowiedzi = new List<string>();
             List<Thread> watki = new List<Thread>();
 
-            for (int i = 0; i <= adresy.Count; i++)
+            foreach (IPAddress adres in adresy)
             {
-                watki[i] = new Thread(() => { odpowiedzi[i] = Ping_Synch(adresy[i].ToString(), timeout, bufor, konfig); } );
-                watki[i].Start();
+                watki.Add(new Thread(() => {lock(odpowiedzi) odpowiedzi.Add(Ping_Synch(adres.ToString(), timeout, bufor, konfig)); } ));
+                progres.Value += (progres.Maximum - progres.Value) / watki.Count;
+                progres.Refresh();
             }
+
+            foreach (Thread watek in watki)
+            {
+                watek.Start();
+            }
+            
+            //Thread.Sleep(timeout * (watki.Count + 3)); //czekam z wyświetlaniem wyników do momentu upłynięcia timeout-ów na pingach
+
+            writer.Write("Koniec wątków");
 
             foreach (string odpowiedz in odpowiedzi)
             {

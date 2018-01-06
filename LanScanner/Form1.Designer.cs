@@ -289,7 +289,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button2;
@@ -300,6 +299,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Button button4;
+        public System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

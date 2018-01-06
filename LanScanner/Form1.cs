@@ -28,6 +28,7 @@ namespace LanScanner
         List<IPAddress> adresyWlasne = new List<IPAddress>();
         IPAddress wybranyIpek;
         int licznik = 0; //wprowadzony by uniknąć zbędnych wywyołań eventu odpowiedzialnego za wybór wartości w lisbox1
+        
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -88,6 +89,7 @@ namespace LanScanner
 
             listaIP = obliczenia.GenerujListeIP(poczatkowy, koncowy);
             writer.Write("Wygenerowano następującą listę IP:");
+            progressBar1.Maximum = listaIP.Count;
 
             foreach (IPAddress adres in listaIP)
             {
@@ -96,14 +98,14 @@ namespace LanScanner
 
             writer.Write("Rozpoczynam ping");
 
-            PingPong pingowanie = new PingPong(writer);
+            PingPong pingowanie = new PingPong(writer, progressBar1);
 
             foreach (IPAddress adres in listaIP)
             {
                 pingowanie.Ping_Asynch(adres, timeout, bufor, opcje);
             }
-
-            writer.Write("Zakończono");
+            if (progressBar1.Value >= progressBar1.Maximum)
+                writer.Write("Zakończono");
         }
 
         public void button2_Click(object sender, EventArgs e)
@@ -175,8 +177,9 @@ namespace LanScanner
             writer.Write("Maska Podsieci to" + adresBroadcast);
 
             adresyLAN = obliczenia.GenerujListeIP(adresSieci, adresBroadcast);
+            progressBar1.Maximum = adresyLAN.Count;
 
-            PingPong pingowanie = new PingPong(writer);
+            PingPong pingowanie = new PingPong(writer, progressBar1);
             writer.Write("Rozpoczynam pingowanie");
 
             foreach (IPAddress ipek in adresyLAN)
@@ -213,8 +216,9 @@ namespace LanScanner
             writer.Write("Maska Podsieci to" + adresBroadcast);
 
             adresyLAN = obliczenia.GenerujListeIP(adresSieci, adresBroadcast);
+            progressBar1.Maximum = adresyLAN.Count;
 
-            PingPong pingowanie = new PingPong(writer);
+            PingPong pingowanie = new PingPong(writer, progressBar1);
             writer.Write("Rozpoczynam pingowanie");
 
             pingowanie.Ping_Wielowatkowy(adresyLAN, timeout, bufor, opcje);
