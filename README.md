@@ -9,16 +9,18 @@ Instalacja nie jest konieczna.
 
 ## Jak przetestowaæ?
 
-Aplikacja sama pobiera wszystkie informacje o konfiguracji wybranego interfejsu sieciowego i na tej podstawie skanuje sieæ lokaln¹.
+Nale¿y uruchomiæ plik LanScanner.exe oraz postêpowaæ zgodnie z instrukcjami.
 
 ## Opis dzia³ania
 
-Po pobraniu danych o sieci lokalnej, aplikacja wyznacza wszystkie mo¿liwe adresy IP w tym LAN-ie i na ich podstawie skanuje sieæ w poszukiwaniu urz¹dzeñ.
+Aplikacja posiada 2 tryby - automatyczny i rêczny.
+W ramach rêcznego u¿ytkownik podaje pocz¹tkowy i koñcowy adres IP. W ramach automatycznego, aplikacja wyœwietla listê interfejsów i adresów IP na interfejsach. 
+Po dokonaniu wyboru, program obliczy maskê podsieci, adres sieci oraz adres broadcast i na ich podstawie rozpocznie ping asynchroniczny lub wielow¹tkowy.
 
 ## ToDo
 
-* rozwi¹zywanie nazw DNS
-* skanowanie wielow¹tkowe
+* pobieranie adresów MAC z tablicy ARP Windows-a i dopasowywanie ich do znalezionych w sieci adresów IP
+* szersza obs³uga b³êdów
 
 ## Wykorzystane Ÿród³a
 
