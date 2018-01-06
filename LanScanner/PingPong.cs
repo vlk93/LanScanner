@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace LanScanner
 {
@@ -48,10 +49,43 @@ namespace LanScanner
             }
             else
             {
-                writer.Write("Błąd: Brak odpowiedzi z " + odpowiedz.Address + ":" + odpowiedz.Status);
+                writer.Write("Błąd: Brak odpowiedzi z " + odpowiedz.Address.ToString() + ":" + odpowiedz.Status);
                 ((IDisposable)(Ping)sender).Dispose();
             }
+        }
 
+        private string Ping_Synch(string adres, int timeout, byte[] bufor, PingOptions opcje)
+        {
+            Ping ping = new Ping();
+            try
+            {
+                PingReply odpowiedz = ping.Send(adres, timeout, bufor, opcje);
+                if (odpowiedz.Status == IPStatus.Success)
+                    return "Odpowiedź z " + adres + " bajtów=" + odpowiedz.Buffer.Length + " czas=" + odpowiedz.RoundtripTime + "ms TTL=" + odpowiedz.Options.Ttl;
+                else
+                    return "Brak odpowiedzi z: " + adres + " " + odpowiedz.Status.ToString();
+            }
+            catch (Exception ex)
+            {
+                return "Błąd podczas wysyłania pingu: " + adres + " " + ex.Message;
+            }
+        }
+
+        public void Ping_Wielowatkowy(List<IPAddress> adresy, int timeout, byte[] bufor, PingOptions konfig)
+        {
+            List<string> odpowiedzi = new List<string>();
+            List<Thread> watki = new List<Thread>();
+
+            for (int i = 0; i <= adresy.Count; i++)
+            {
+                watki[i] = new Thread(() => { odpowiedzi[i] = Ping_Synch(adresy[i].ToString(), timeout, bufor, konfig); } );
+                watki[i].Start();
+            }
+
+            foreach (string odpowiedz in odpowiedzi)
+            {
+                writer.Write(odpowiedz);
+            }
         }
     }
 }

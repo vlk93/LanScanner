@@ -27,6 +27,7 @@ namespace LanScanner
         NetworkInterface wybranyInterfejs;
         List<IPAddress> adresyWlasne = new List<IPAddress>();
         IPAddress wybranyIpek;
+        int licznik = 0; //wprowadzony by uniknąć zbędnych wywyołań eventu odpowiedzialnego za wybór wartości w lisbox1
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -120,25 +121,27 @@ namespace LanScanner
 
         private void listBox1_SelectedIndexChanged(Object sender, EventArgs e)
         {
-            MultiWriter writer = new MultiWriter(textBox1, sciezka_log);
-            wybranyInterfejs = (NetworkInterface)listBox1.SelectedItem;
-            writer.Write("Wybrano Interfejs: " + wybranyInterfejs.Name);
-            if (wybranyInterfejs == null)
+            if (licznik <= 1) //warunek konieczny by uniknąć zbędnych wywołań eventu. Zrobiony w związku z tmy, że nie znalazłe właściwości odpowiedzialnej za domyślną wartość listbox-a.
             {
-                writer.Write("Ne wybrano interfejsu");
+                licznik++; 
             }
             else
             {
-                adresyWlasne = NetConfig.ListaIPwlasne(wybranyInterfejs);
-                writer.Write("Pobrano adresy: ");
-            }
+                MultiWriter writer = new MultiWriter(textBox1, sciezka_log);
+                wybranyInterfejs = (NetworkInterface)listBox1.SelectedItem;
+                writer.Write("Wybrano Interfejs: " + wybranyInterfejs.Name);
+                if (wybranyInterfejs == null)
+                {
+                    writer.Write("Ne wybrano interfejsu");
+                }
+                else
+                {
+                    adresyWlasne = NetConfig.ListaIPwlasne(wybranyInterfejs);
+                }
 
-            foreach (IPAddress ipek in adresyWlasne) //prawdopodobnie metoda nie pobiera ipków właściwie
-            {
-                writer.Write(ipek.ToString());
+                listBox2.DataSource = adresyWlasne;
+                listBox1.DisplayMember = "ToString";
             }
-            listBox2.DataSource = adresyWlasne;
-            listBox1.DisplayMember = "ToString";
         }
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -182,6 +185,39 @@ namespace LanScanner
             }
 
             writer.Write("Koniec pingu");
+
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            MultiWriter writer = new MultiWriter(textBox1, sciezka_log);
+            NetCalculations obliczenia = new NetCalculations(writer);
+            writer.Write("Rozpoczynam obliczenia");
+            IPAddress maskaPodsieci;
+            IPAddress adresSieci;
+            IPAddress adresBroadcast;
+            string dane = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+            byte[] bufor = Encoding.ASCII.GetBytes(dane);
+            int timeout = 120;
+            PingOptions opcje = new PingOptions();
+            List<IPAddress> adresyLAN = new List<IPAddress>();
+
+            maskaPodsieci = NetCalculations.ObliczMaskePodsieci(wybranyIpek, wybranyInterfejs).MapToIPv4();
+            writer.Write("Maska podsieci to: " + maskaPodsieci);
+
+            adresSieci = NetCalculations.ObliczAdresSieci(wybranyIpek, maskaPodsieci);
+            writer.Write("Adres sieci to: " + adresSieci);
+
+            adresBroadcast = NetCalculations.ObliczAdresBroadcast(wybranyIpek, maskaPodsieci);
+            writer.Write("Maska Podsieci to" + adresBroadcast);
+
+            adresyLAN = obliczenia.GenerujListeIP(adresSieci, adresBroadcast);
+
+            PingPong pingowanie = new PingPong(writer);
+            writer.Write("Rozpoczynam pingowanie");
+
+            pingowanie.Ping_Wielowatkowy(adresyLAN, timeout, bufor, opcje);
 
 
         }

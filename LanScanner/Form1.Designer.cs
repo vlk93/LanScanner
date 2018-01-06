@@ -46,6 +46,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.button4 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -128,6 +129,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button4);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.button3);
             this.groupBox2.Controls.Add(this.label6);
@@ -150,7 +152,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label7.Location = new System.Drawing.Point(249, 266);
+            this.label7.Location = new System.Drawing.Point(248, 286);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(56, 17);
             this.label7.TabIndex = 9;
@@ -163,7 +165,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(248, 28);
             this.button3.TabIndex = 8;
-            this.button3.Text = "Rozpocznij";
+            this.button3.Text = "Rozpocznij asynchronicznie";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -231,7 +233,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 296);
+            this.progressBar1.Location = new System.Drawing.Point(9, 317);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(527, 23);
             this.progressBar1.TabIndex = 1;
@@ -246,6 +248,17 @@
             this.listBox1.Size = new System.Drawing.Size(248, 68);
             this.listBox1.TabIndex = 0;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
+            // button4
+            // 
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.button4.Location = new System.Drawing.Point(288, 249);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(248, 28);
+            this.button4.TabIndex = 10;
+            this.button4.Text = "Rozpocznij wielowątkowo";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // Form1
             // 
@@ -286,6 +299,7 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.Button button4;
     }
 }
 
