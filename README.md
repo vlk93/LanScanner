@@ -11,7 +11,7 @@ Instalacja nie jest konieczna.
 
 Nale¿y uruchomiæ plik LanScanner.exe oraz postêpowaæ zgodnie z instrukcjami.
 
-![My image](/screen.JPG)
+![My image](/LanScanner/screen.JPG)
 
 ## Opis dzia³ania
 
