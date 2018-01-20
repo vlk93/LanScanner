@@ -11,7 +11,7 @@ Instalacja nie jest konieczna.
 
 Nale¿y uruchomiæ plik LanScanner.exe oraz postêpowaæ zgodnie z instrukcjami.
 
-![My image](vlk24.github.com/LanScanner/screen.jpg)
+![My image](github.com/vlk93/LanScanner/tree/master/LanScanner/screen.JPG)
 
 ## Opis dzia³ania
 
